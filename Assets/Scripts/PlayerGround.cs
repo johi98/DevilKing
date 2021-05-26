@@ -8,7 +8,7 @@ public class PlayerGround : MonoBehaviour
 
     private void Start()
     {
-        playerAnimator = GetComponentInChildren<Animator>();
+        playerAnimator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update

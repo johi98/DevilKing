@@ -31,7 +31,7 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
     void Start()
     {
         radius = rect_Background.rect.width * 0.5f;
-        playerAnimator = go_Player.GetComponentInChildren<Animator>();
+        playerAnimator = go_Player.GetComponent<Animator>();
         playerRigidbody = go_Player.GetComponent<Rigidbody>();
     }
 
@@ -40,12 +40,13 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
 
     private void FixedUpdate()
     {
-        if (isTouch)
+        if (isTouch && playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Armed-Run-Forward"))
         {
+          /*  go_Player.transform.LookAt(go_Player.transform.position + movePosition);
             //이동
-            go_Player.transform.position += movePosition;
-
-            //점프
+            //go_Player.transform.position += movePosition;
+            playerRigidbody.MovePosition(go_Player.transform.position + movePosition);
+            //점프*/
             if (canJump == true && isJumping == false)
             {
                 StartCoroutine("Jump");
@@ -53,13 +54,13 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
             }
 
         }
-      
-       
+
+
 
     }
     private void Update()
     {
-       
+        playerAnimator.SetBool("isMove", movePosition != Vector3.zero);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -71,12 +72,12 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
         // float distance = Vector2.Distance(rect_Background.position, rect_Joystick.position) / radius;
 
         JoystickNomalize(ref value);
-
-        movePosition = new Vector3(value.x * moveSpeed * Time.deltaTime, 0f, 0f);
         go_Player.transform.LookAt(go_Player.transform.position + movePosition);
+        movePosition = new Vector3(value.x * moveSpeed * Time.deltaTime, 0f, 0f);
 
 
-        playerAnimator.SetBool("isMove", value != Vector2.zero);
+
+   
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -90,7 +91,7 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
         rect_Joystick.localPosition = Vector3.zero;
         movePosition = Vector3.zero;
 
-        playerAnimator.SetBool("isMove", movePosition != Vector3.zero);
+       
     }
 
     private void JoystickNomalize(ref Vector2 v2)
@@ -118,11 +119,15 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
        
     }
 
+
+
+
     IEnumerator Jump()
     {
         playerAnimator.SetBool("isJump", true);
         playerAnimator.SetTrigger("doJump");
-        playerRigidbody.AddForce(Vector2.up * 8, ForceMode.Impulse);
+        playerRigidbody.velocity = Vector3.zero;
+        playerRigidbody.AddForce(Vector2.up * 5, ForceMode.Impulse);
         yield return new WaitForSeconds(3f);
        // playerAnimator.SetBool("isJump", false);
         isJumping = false;
