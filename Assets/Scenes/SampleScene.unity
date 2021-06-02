@@ -1251,6 +1251,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7177295584575621872, guid: 9eebe6906bd66d94bbfb3ea486281e58,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7177295584575621873, guid: 9eebe6906bd66d94bbfb3ea486281e58,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7177295584575621873, guid: 9eebe6906bd66d94bbfb3ea486281e58,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7177295584575621886, guid: 9eebe6906bd66d94bbfb3ea486281e58,
         type: 3}
       propertyPath: m_Name
@@ -1285,6 +1300,16 @@ PrefabInstance:
       propertyPath: swingAttack
       value: 
       objectReference: {fileID: 282252328}
+    - target: {fileID: 2055317765089180211, guid: ca4112d36d9015a4bab46d40853b2175,
+        type: 3}
+      propertyPath: stone
+      value: 
+      objectReference: {fileID: 173166, guid: 1857c95340f2e4f48a533a249e5bc163, type: 3}
+    - target: {fileID: 2055317765089180213, guid: ca4112d36d9015a4bab46d40853b2175,
+        type: 3}
+      propertyPath: m_Speed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2058410431373491610, guid: ca4112d36d9015a4bab46d40853b2175,
         type: 3}
       propertyPath: m_LocalPosition.x

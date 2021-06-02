@@ -17,14 +17,14 @@ public class OrcAI : MonoBehaviour
     public Collider jumpAttack;
     public Collider swingAttack;
     Collider attackColider;
-
-
+    public GameObject stone;
+    public bool canRangeAttack = false;
 
     public enum OrcAttack
     {
         SwingAttack,
         JumpAttack,
-        MountAttack
+        DropStone
     }
 
 
@@ -75,7 +75,7 @@ public class OrcAI : MonoBehaviour
       
     }
 
-
+ 
     void ChaseStart()
     {
 
@@ -110,30 +110,50 @@ public class OrcAI : MonoBehaviour
 
     }
 
-
+    public void DropStone()
+    {
+        Instantiate(stone, new Vector3(playerTransform.position.x, 10, 0), Quaternion.identity);
+    }
 
 
     IEnumerator OrcThink()
     {
         isThink = true;
         
-        yield return new WaitForSeconds(1f);
+        //yield return new WaitForSeconds(1f);
 
-        Debug.Log("오크 생각");
+        //Debug.Log("오크 생각");
         ChaseEnd();
 
 
 
         if(nav.remainingDistance > nav.stoppingDistance +2 )
         {
-          
-            ChaseStart();
-            yield return new WaitForSeconds(2f);
-            isThink = false;
+            if(canRangeAttack)
+            {
+                nav.enabled = false;
+                isAttack = true;
+                orcAnimator.SetTrigger("dropStone");
+                yield return new WaitForSeconds(3.5f);
+                nav.enabled = true;
+                isAttack = false;
+                nav.isStopped = true;
+                yield return new WaitForSeconds(1f);
+                isThink = false;
+                canRangeAttack = false;
+            }
+            else
+            {
+                ChaseStart();
+                yield return new WaitForSeconds(2f);
+                isThink = false;
+            }
+      
 
         }
         else
         {
+            transform.LookAt(new Vector3(playerTransform.position.x, 0.5f, 0.5f));
             OrcAttack _orcAttack;
             _orcAttack =(OrcAttack)Random.Range(0, 2);
 
@@ -146,6 +166,7 @@ public class OrcAI : MonoBehaviour
        
                     yield return new WaitForSeconds(6f);
                     nav.enabled = true;
+                    canRangeAttack = true;//원거리 공격 가능하게 만듬 조건 잘모르겠어서 일단 여기 넣음
                     break;
                 case OrcAttack.JumpAttack:
                     orcAnimator.SetTrigger("jumpAttack");
@@ -153,18 +174,18 @@ public class OrcAI : MonoBehaviour
                     yield return new WaitForSeconds(4f);
                     nav.enabled = true;
                     break;
-                case OrcAttack.MountAttack:
-                    orcAnimator.SetTrigger("mountAttack");
+             /*   case OrcAttack.DropStone:
+                    orcAnimator.SetTrigger("dropStone");
                     yield return new WaitForSeconds(3.5f);
                     nav.enabled = true;
-                    break;
+                    break;*/
             }
 
 
             isAttack = false;
             nav.enabled = true;
             nav.isStopped = true;
-            Debug.Log("오크 생각 끝");
+            //Debug.Log("오크 생각 끝");
         
             yield return new WaitForSeconds(1f);
             isThink = false;

@@ -10,13 +10,13 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
    
   
 
-    [SerializeField] private RectTransform rect_Background;
-    [SerializeField] private RectTransform rect_Joystick;
+   public RectTransform rect_Background;
+    public RectTransform rect_Joystick;
 
     private float radius;
 
-    [SerializeField] private GameObject go_Player;
-    [SerializeField] private float moveSpeed;
+    public GameObject go_Player;
+    public float moveSpeed;
 
     private bool isTouch = false;
     private Vector3 movePosition;
