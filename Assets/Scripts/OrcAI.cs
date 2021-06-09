@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.PlayerLoop;
+using UnityEngine.UIElements;
 
 public class OrcAI : MonoBehaviour
 {
     bool isThink;
     bool isChase;
-    bool isAttack = false;
     Animator orcAnimator;
     public GameObject player;
     Transform playerTransform;
@@ -16,15 +16,19 @@ public class OrcAI : MonoBehaviour
     NavMeshAgent nav;
     public Collider jumpAttack;
     public Collider swingAttack;
-    Collider attackColider;
-    public GameObject stone;
+    public GameObject dropStone;
+    public GameObject shotStone;
+    public Transform bulletTransform;
     public bool canRangeAttack = false;
 
     public enum OrcAttack
     {
         SwingAttack,
         JumpAttack,
-        DropStone
+        DropStone,
+        Roaring,
+        Angry,
+        ShotStone
     }
 
 
@@ -112,31 +116,35 @@ public class OrcAI : MonoBehaviour
 
     public void DropStone()
     {
-        Instantiate(stone, new Vector3(playerTransform.position.x, 10, 0), Quaternion.identity);
+        Instantiate(dropStone, new Vector3(playerTransform.position.x, 10, 0), dropStone.transform.rotation);
     }
-
+    public void ShotStone()
+    {
+        GameObject instantStone = Instantiate(shotStone, bulletTransform.position, shotStone.transform.rotation);
+        instantStone.GetComponent<Rigidbody>().velocity = gameObject.transform.forward*10;
+    }
 
     IEnumerator OrcThink()
     {
         isThink = true;
         
-        //yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.2f);
 
         //Debug.Log("오크 생각");
         ChaseEnd();
 
 
 
-        if(nav.remainingDistance > nav.stoppingDistance +2 )
+        if(nav.remainingDistance > nav.stoppingDistance +5 )
         {
             if(canRangeAttack)
             {
                 nav.enabled = false;
-                isAttack = true;
                 orcAnimator.SetTrigger("dropStone");
+
+
                 yield return new WaitForSeconds(3.5f);
                 nav.enabled = true;
-                isAttack = false;
                 nav.isStopped = true;
                 yield return new WaitForSeconds(1f);
                 isThink = false;
@@ -155,18 +163,15 @@ public class OrcAI : MonoBehaviour
         {
             transform.LookAt(new Vector3(playerTransform.position.x, 0.5f, 0.5f));
             OrcAttack _orcAttack;
-            _orcAttack =(OrcAttack)Random.Range(0, 2);
+            _orcAttack = (OrcAttack)Random.Range(0, 4);
 
             nav.enabled = false;
-            isAttack = true;
             switch (_orcAttack)
             {
                 case OrcAttack.SwingAttack:
                     orcAnimator.SetTrigger("swingAttack");
-       
                     yield return new WaitForSeconds(6f);
                     nav.enabled = true;
-                    canRangeAttack = true;//원거리 공격 가능하게 만듬 조건 잘모르겠어서 일단 여기 넣음
                     break;
                 case OrcAttack.JumpAttack:
                     orcAnimator.SetTrigger("jumpAttack");
@@ -174,15 +179,25 @@ public class OrcAI : MonoBehaviour
                     yield return new WaitForSeconds(4f);
                     nav.enabled = true;
                     break;
-             /*   case OrcAttack.DropStone:
-                    orcAnimator.SetTrigger("dropStone");
+                case OrcAttack.DropStone:
+                    orcAnimator.SetTrigger("shotStone");
                     yield return new WaitForSeconds(3.5f);
                     nav.enabled = true;
-                    break;*/
+                    break;
+                case OrcAttack.Roaring:
+                    orcAnimator.SetTrigger("roaring");
+                    yield return new WaitForSeconds(3.5f);
+                    nav.enabled = true;
+                    break;
+                case OrcAttack.Angry:
+                    orcAnimator.SetTrigger("angry");
+                    yield return new WaitForSeconds(10f);
+                    nav.enabled = true;
+                    break;
             }
 
+            canRangeAttack = true;
 
-            isAttack = false;
             nav.enabled = true;
             nav.isStopped = true;
             //Debug.Log("오크 생각 끝");

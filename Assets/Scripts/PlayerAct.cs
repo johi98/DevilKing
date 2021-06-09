@@ -66,12 +66,14 @@ public class PlayerAct : MonoBehaviour
     {
         Debug.Log("맞음");
         playerAnimator.SetTrigger("doDamage");
+        playerAnimator.SetBool("isDamage", true);
     }
 
     IEnumerator AvoidDamage()
     {
         isCanDamage = false;
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(6f);
+        playerAnimator.SetBool("isDamage", false);
         isCanDamage = true;
         yield return null;
     }

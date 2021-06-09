@@ -42,11 +42,11 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
     {
         if (isTouch && playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Armed-Run-Forward"))
         {
-          /*  go_Player.transform.LookAt(go_Player.transform.position + movePosition);
+          
             //이동
             //go_Player.transform.position += movePosition;
             playerRigidbody.MovePosition(go_Player.transform.position + movePosition);
-            //점프*/
+            //점프
             if (canJump == true && isJumping == false)
             {
                 StartCoroutine("Jump");
@@ -72,7 +72,11 @@ public class PlayerJoystick : MonoBehaviour, IPointerDownHandler , IPointerUpHan
         // float distance = Vector2.Distance(rect_Background.position, rect_Joystick.position) / radius;
 
         JoystickNomalize(ref value);
-        go_Player.transform.LookAt(go_Player.transform.position + movePosition);
+        if(!playerAnimator.GetBool("isDamage"))//맞고도 와리가리 못하게
+        {
+            go_Player.transform.LookAt(go_Player.transform.position + movePosition);
+        }
+    
         movePosition = new Vector3(value.x * moveSpeed * Time.deltaTime, 0f, 0f);
 
 
